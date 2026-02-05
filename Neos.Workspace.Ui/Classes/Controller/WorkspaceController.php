@@ -486,7 +486,7 @@ class WorkspaceController extends AbstractModuleController
             );
             $this->addFlashMessage($message, '', Message::SEVERITY_WARNING);
             $this->throwStatus(403, 'Workspace has unpublished nodes');
-        // delete workspace on POST -> TODO: Split this into 2 actions like the create or edit workflows
+            // delete workspace on POST -> TODO: Split this into 2 actions like the create or edit workflows
         } elseif ($this->request->getHttpRequest()->getMethod() === 'POST') {
             $this->workspaceService->deleteWorkspace($contentRepositoryId, $workspaceName);
 
@@ -496,7 +496,7 @@ class WorkspaceController extends AbstractModuleController
                     [$workspaceMetadata->title->value],
                 )
             );
-        // Render a confirmation form if the request is not a POST request
+            // Render a confirmation form if the request is not a POST request
         } else {
             $this->view->assign('workspaceName', $workspace->workspaceName->value);
             $this->view->assign('workspaceTitle', $workspaceMetadata->title->value);
@@ -727,7 +727,7 @@ class WorkspaceController extends AbstractModuleController
                 $this->addFlashMessage($this->getModuleLabel('workspaces.ForceRebaseWorkspaceFailed'));
                 $this->forward('index');
             }
-            $conflictInformation = array_map(fn (ConflictingEvent $conflictingEvent) => [
+            $conflictInformation = array_map(fn(ConflictingEvent $conflictingEvent) => [
                 'error' => $conflictingEvent->getException()->getMessage(),
                 'affectedNode' => $conflictingEvent->getAffectedNodeAggregateId(),
                 'event' => (new \ReflectionClass($conflictingEvent->getEvent()))->getShortName() . ' ' . $conflictingEvent->getSequenceNumber()->value,
@@ -806,7 +806,7 @@ class WorkspaceController extends AbstractModuleController
                 $changesCount['changed']++;
             }
         }
-        return new PendingChanges(new: $changesCount['new'], changed: $changesCount['changed'], removed:$changesCount['removed']);
+        return new PendingChanges(new: $changesCount['new'], changed: $changesCount['changed'], removed: $changesCount['removed']);
     }
 
     /**
@@ -852,6 +852,7 @@ class WorkspaceController extends AbstractModuleController
                 $nodePathSegments = [];
                 $documentPathSegments = [];
                 $documentPathSegmentsNames = [];
+
                 foreach ($ancestors as $ancestor) {
                     $pathSegment = $ancestor->name ?: NodeName::fromString($ancestor->aggregateId->value);
                     // Don't include `sites` path as they are not needed
@@ -991,7 +992,7 @@ class WorkspaceController extends AbstractModuleController
         ContentRepository $contentRepository,
     ): ContentChangeItems {
         $currentWorkspace = $contentRepository->findWorkspaces()->find(
-            fn (Workspace $potentialWorkspace) => $potentialWorkspace->currentContentStreamId->equals($contentStreamIdOfOriginalNode)
+            fn(Workspace $potentialWorkspace) => $potentialWorkspace->currentContentStreamId->equals($contentStreamIdOfOriginalNode)
         );
         $originalNode = null;
         if ($currentWorkspace !== null) {
